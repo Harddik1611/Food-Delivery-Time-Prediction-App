@@ -112,15 +112,23 @@ set_cool_modern_background()
 @st.cache_resource
 def load_model_and_scaler():
     try:
-        with open('scaler.pkl', 'rb') as f:
+        # Get the directory where this script lives
+        base_dir = os.path.dirname(__file__)  
+
+        scaler_path = os.path.join(base_dir, "scaler.pkl")
+        model_path = os.path.join(base_dir, "model.pkl")
+
+        with open(scaler_path, "rb") as f:
             scaler = pickle.load(f)
-        with open('model.pkl', 'rb') as f:
+
+        with open(model_path, "rb") as f:
             model = pickle.load(f)
+
         return model, scaler
     except FileNotFoundError:
-        st.error("⚠️ Model files not found. Please place `model.pkl` and `scaler.pkl` next to this app.")
+        st.error("⚠️ Model files not found. Please place `model.pkl` and `scaler.pkl` inside the `EDA/` folder.")
         return None, None
-
+        
 @st.cache_data
 def load_delivery_person_data(uploaded_file):
     # If a user CSV is provided, prefer IDs from it
