@@ -267,7 +267,7 @@ def get_lat_long_opencage(address: str, api_key: str):
 # 🧠 APP LAYOUT
 # =========================
 st.markdown('<div class="main-header">', unsafe_allow_html=True)
-st.title('🚚 AI-Powered Delivery Time Prediction')
+st.title('🚚 AI-Powered Delivery Time Prediction APP')
 st.markdown("Get accurate delivery time estimates using machine learning")
 st.markdown('</div>', unsafe_allow_html=True)
 
