@@ -1,2 +1,12 @@
-venv
-sql_ingestion.log
+venv/
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+.DS_Store
+.env
+.streamlit/secrets.toml
+*.log
+*.db
+data/*.csv
+Report.docx

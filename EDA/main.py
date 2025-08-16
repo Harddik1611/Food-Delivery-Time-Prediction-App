@@ -17,7 +17,7 @@ def get_api_key():
     # 1) Try local module, if present
     api_key = None
     try:
-        from Location_Finder_api_copy import api_key as _k
+        from Location_Finder_api import api_key as _k
         api_key = _k
     except Exception:
         pass
