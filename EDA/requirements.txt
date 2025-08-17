@@ -12,3 +12,4 @@ matplotlib
 quarto
 seaborn
 jupyter
+ipykernel
