@@ -6,7 +6,7 @@
 
 ![Status](https://img.shields.io/badge/Status-Live%20App-brightgreen?style=for-the-badge)
 ![Accuracy](https://img.shields.io/badge/Accuracy-82%25-blue?style=for-the-badge)
-![Streamlit[](https://img.shields.io/badge/Interface-Streamlit-red?style=for-the-badge)](https://0198ba5c-73a6-eba5-fb28-48b9ce49395c.share.connect.posit.cloud/)
+![Streamlit[](https://0198ba5c-73a6-eba5-fb28-48b9ce49395c.share.connect.posit.cloud/)
 
 [🌐 Try Live App](https://food-delivery-time-predictor.streamlit.app) • [📱 Quick Setup](#-quick-start) • [🤖 How It Works](#-how-it-works) • [📊 Features](#-what-you-get)
 
