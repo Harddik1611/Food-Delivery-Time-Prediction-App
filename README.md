@@ -286,7 +286,7 @@ If you see errors, copy-paste them and [create an issue](https://github.com/your
 ### 💬 Still Stuck?
 
 **Quick Help:**
-- 📧 Email us: help@example.com
+- 📧 Email us: harddik05@gmail.com
 - 💬 Chat: [Discord Community](https://discord.gg/example)
 - 🐛 Bug report: [GitHub Issues](https://github.com/your-username/food-delivery-prediction/issues)
 
