@@ -6,9 +6,9 @@
 
 ![Status](https://img.shields.io/badge/Status-Live%20App-brightgreen?style=for-the-badge)
 ![Accuracy](https://img.shields.io/badge/Accuracy-82%25-blue?style=for-the-badge)
-![Streamlit](https://food-delivery-time-prediction-app-qeq4y7vdcbxve39oe3gknu.streamlit.app/)
+![Streamlit](https://connect.posit.cloud/harddiksingh05/content/0198ba5c-73a6-eba5-fb28-48b9ce49395c)
 
-[🌐 Try Live App](https://food-delivery-time-predictor.streamlit.app) • [📱 Quick Setup](#-quick-start) • [🤖 How It Works](#-how-it-works) • [📊 Features](#-what-you-get)
+[🌐 Try Live App](https://connect.posit.cloud/harddiksingh05/content/0198ba5c-73a6-eba5-fb28-48b9ce49395c) • [📱 Quick Setup](#-quick-start) • [🤖 How It Works](#-how-it-works) • [📊 Features](#-what-you-get)
 
 </div>
 
@@ -17,7 +17,7 @@
 ## 🌟 What's New?
 
 ### 🎉 **Interactive Web App Available!**
-- **🌐 [Live app online](https://food-delivery-time-predictor.streamlit.app)** - try it now, no setup needed!
+- **🌐 [Live app online](https://connect.posit.cloud/harddiksingh05/content/0198ba5c-73a6-eba5-fb28-48b9ce49395c)** - try it now, no setup needed!
 - **No coding required** - just click and predict
 - **Beautiful modern interface** with real-time results
 - **Built-in performance tracking** to see how accurate we are
@@ -29,7 +29,7 @@
 
 ### Option 1: Use Online (Easiest - 30 seconds)
 
-🌐 **[Try Live App Now →](https://food-delivery-time-predictor.streamlit.app)**
+🌐 **[Try Live App Now →](https://connect.posit.cloud/harddiksingh05/content/0198ba5c-73a6-eba5-fb28-48b9ce49395c)**
 
 *No installation needed! Just click the link and start predicting delivery times instantly.*
 
@@ -473,7 +473,7 @@ pytest tests/  # Run tests
 
 **Ready to predict some delivery times?**
 
-[🌐 **Try Live App**]([https://food-delivery-time-predictor.streamlit.app]([https://0198ba5c-73a6-eba5-fb28-48b9ce49395c.share.connect.posit.cloud/](https://0198ba5c-73a6-eba5-fb28-48b9ce49395c.share.connect.posit.cloud/) | [📱 **Download Code**](https://github.com/your-username/food-delivery-prediction) | [📖 **Read Docs**](https://docs.example.com) | [💬 **Get Support**](harddik05@example.com)
+[🌐 **Try Live App**](https://0198ba5c-73a6-eba5-fb28-48b9ce49395c.share.connect.posit.cloud/) | [📱 **Download Code**](https://github.com/your-username/food-delivery-prediction) | [📖 **Read Docs**](https://docs.example.com) | [💬 **Get Support**](harddik05@example.com)
 
 **Made with ❤️ and lots of 🍕**
 
