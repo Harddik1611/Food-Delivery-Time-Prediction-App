@@ -1,0 +1,14 @@
+streamlit
+pandas
+numpy
+scikit-learn
+geopy
+requests
+scikit-learn
+requests
+datetime
+xgboost
+matplotlib
+quarto
+seaborn
+jupyter

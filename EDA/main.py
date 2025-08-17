@@ -1,6 +1,8 @@
 import os
 import hashlib
 from datetime import datetime, time, date
+import matplotlib.pyplot as plt
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 import numpy as np
 import pandas as pd
@@ -332,26 +334,24 @@ with col6:
 show_debug = st.checkbox("🔎 Show debug info", value=False)
 
 # =========================
-# 🔮 PREDICTION
+# 🔮 DELIVERY TIME PREDICTION 
 # =========================
-if st.button('🔮 Predict Delivery Time with AI', use_container_width=True):
+if st.button('🔮 Predict Delivery Time', use_container_width=True):
     if model is None or scaler is None:
-        st.error("❌ Model not loaded.")
+        st.error("❌ The prediction model is not loaded.")
     elif not restaurant_address or not delivery_address:
-        st.error("❌ Please enter both addresses.")
+        st.error("❌ Please provide both restaurant and delivery addresses.")
     else:
         key = get_api_key()
         if not key:
-            st.error("❌ OpenCage API key not found. Add it in `Location_Finder_api_copy.py` as `api_key`, "
-                     "or set `st.secrets['OPENCAGE_API_KEY']`, or env var `OPENCAGE_API_KEY`.")
+            st.error("❌ API key for location lookup is missing.")
         else:
             rest_lat, rest_long = get_lat_long_opencage(restaurant_address, key)
             del_lat, del_long = get_lat_long_opencage(delivery_address, key)
 
             if rest_lat is None or del_lat is None:
-                st.error("❌ Could not fetch coordinates for one or both addresses.")
+                st.error("❌ Could not find coordinates for one or both addresses.")
             else:
-                # Build raw row
                 input_data = pd.DataFrame({
                     'Delivery_person_ID': [delivery_person_id],
                     'Delivery_person_Age': [age],
@@ -373,70 +373,84 @@ if st.button('🔮 Predict Delivery Time with AI', use_container_width=True):
                     'City': [city]
                 })
 
-                # Extra features expected by many training setups
+                # Process features for the model
                 extract_city_code(input_data)
                 add_rating_category_numeric(input_data)
                 ensure_numeric_distance(input_data)
-
-                # Harmonize field names the trainer might have expected
-                input_data['multi_deliveries'] = input_data['multiple_deliveries']  # alias if used
-
-                # Date/time derivations and cleanup
+                input_data['multi_deliveries'] = input_data['multiple_deliveries']
                 extract_date_features(input_data)
                 calculate_time_diff(input_data)
-
-                # Drop ID if not in training
-                # (We’ll re-add as zero if scaler expects it — alignment step handles that)
-                if 'Delivery_person_ID' in input_data.columns:
-                    pass  # keep for now, encode if necessary
-
-                # Encode categoricals (ensure category dtype also gets encoded)
                 safe_label_encode_all_objects(input_data)
 
-                # Now drop Delivery_person_ID if still present (encoded now numeric; keep only if scaler expects it)
-                # Alignment step below will handle presence/absence precisely.
-
-                # ===== Alignment to training features =====
                 expected = list(getattr(scaler, "feature_names_in_", []))
-                if not expected:
-                    st.error("❌ Your scaler is missing `feature_names_in_`. Please fit it with named columns.")
-                else:
-                    # Add any missing expected columns as 0
-                    for col in expected:
-                        if col not in input_data.columns:
-                            input_data[col] = 0
+                for col in expected:
+                    if col not in input_data.columns:
+                        input_data[col] = 0
+                input_data = input_data[expected]
+                for c in input_data.columns:
+                    input_data[c] = pd.to_numeric(input_data[c], errors='coerce').fillna(0)
 
-                    # Keep only expected columns, in the exact order
-                    input_data = input_data[expected]
+                try:
+                    Xs = scaler.transform(input_data)
+                    yhat = model.predict(Xs)
+                    predicted_time = round(float(yhat[0]), 1)
+                    est_delivery = datetime.combine(order_date, time_order_picked) + pd.Timedelta(minutes=predicted_time)
 
-                    if show_debug:
-                        st.write("Expected features count:", len(expected))
-                        st.write("Input columns count:", input_data.shape[1])
-                        st.write("First few columns:", input_data.columns[:10].tolist())
-                        st.write(input_data.head())
+                    st.markdown(f"""
+                        <div style='background:#FF7043; padding:20px; border-radius:10px; text-align:center; color:white;'>
+                            <h2>🤖 Predicted Delivery Time</h2>
+                            <h1 style='font-size:3em;'>{predicted_time} minutes</h1>
+                            <p>Expected delivery by: <strong>{est_delivery.strftime('%I:%M %p')}</strong></p>
+                        </div>
+                    """, unsafe_allow_html=True)
 
-                    # Final numeric dtype enforcement
-                    for c in input_data.columns:
-                        if not np.issubdtype(input_data[c].dtype, np.number):
-                            input_data[c] = pd.to_numeric(input_data[c], errors='coerce').fillna(0)
+                    # User enters actual delivery time
+                    actual_time = st.number_input("Enter the actual delivery time (minutes):", min_value=0.0, step=1.0)
+                    if st.button("📥 Save Actual Time"):
+                        log_file = "prediction_logs.csv"
+                        new_row = pd.DataFrame([{'predicted_time': predicted_time, 'actual_time': actual_time}])
+                        if os.path.exists(log_file):
+                            logs = pd.read_csv(log_file)
+                            logs = pd.concat([logs, new_row], ignore_index=True)
+                        else:
+                            logs = new_row
+                        logs.to_csv(log_file, index=False)
+                        st.success("✅ Your delivery time has been logged!")
 
-                    # Scale & predict
-                    try:
-                        Xs = scaler.transform(input_data)
-                        yhat = model.predict(Xs)
-                        predicted_time = round(float(yhat[0]), 1)
-                        est_delivery = (
-                            datetime.combine(order_date, time_order_picked) +
-                            pd.Timedelta(minutes=predicted_time)
-                        )
-                        st.markdown(f"""
-                            <div style="background: linear-gradient(135deg, #FF8A65 0%, #FF7043 100%);
-                                        padding: 30px; border-radius: 15px; text-align: center;
-                                        color: white; box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
-                                <h2>🤖 AI Prediction Result</h2>
-                                <h1 style="font-size: 4em;">{predicted_time} minutes</h1>
-                                <p>⏰ Expected delivery by: <strong>{est_delivery.strftime('%I:%M %p')}</strong></p>
-                            </div>
-                        """, unsafe_allow_html=True)
-                    except Exception as e:
-                        st.error(f"❌ Prediction failed: {e}")
+                except Exception as e:
+                    st.error(f"❌ Prediction failed: {e}")
+
+# =========================
+# 📊 SIMPLE SIDEBAR DASHBOARD
+# =========================
+with st.sidebar:
+    st.header("📊 Delivery Dashboard")
+
+    if os.path.exists("prediction_logs.csv"):
+        logs = pd.read_csv("prediction_logs.csv")
+        if not logs.empty:
+            y_true = logs['actual_time']
+            y_pred = logs['predicted_time']
+
+            mae = mean_absolute_error(y_true, y_pred)
+            rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+            r2 = r2_score(y_true, y_pred)
+
+            st.subheader("Accuracy Overview")
+            st.write(f"Average difference between prediction and real time: **{mae:.1f} min**")
+            st.write(f"Typical range of error: **{rmse:.1f} min**")
+            st.write(f"Consistency (closer to 1 is better): **{r2:.2f}**")
+            st.write(f"Total deliveries logged: {len(logs)}")
+
+            # Simple scatter chart
+            fig, ax = plt.subplots()
+            ax.scatter(y_true, y_pred, alpha=0.6)
+            ax.plot([y_true.min(), y_true.max()], [y_true.min(), y_true.max()], 'r--')
+            ax.set_xlabel("Actual Time")
+            ax.set_ylabel("Predicted Time")
+            ax.set_title("Predicted vs Actual")
+            st.pyplot(fig)
+        else:
+            st.info("No deliveries logged yet. Predict a few to see metrics.")
+    else:
+        st.info("No data yet. Start predicting and log actual times!")

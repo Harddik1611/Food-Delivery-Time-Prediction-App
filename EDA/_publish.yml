@@ -1,0 +1,4 @@
+- source: EDA_Food_Delivery.ipynb
+  quarto-pub:
+    - id: e7d47bc9-542e-439d-96d8-aac1b81e1c33
+      url: https://harddik.quarto.pub/food-delivery-time-predictions-analysis
