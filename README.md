@@ -1,4 +1,4 @@
-# 🍕 Food Delivery Time Predictor
+# 🍕 Food Delivery Time Predictor App
 
 <div align="center">
 
